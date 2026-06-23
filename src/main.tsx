@@ -12,7 +12,7 @@ createRoot(document.getElementById('root')!).render(
         <Route index element={<App />} />
         <Route path="rustracer" element={<Rustracer />} />
       </Routes>
-    </BrowserRouter>,
+    </BrowserRouter>
   </StrictMode>,
 
 )

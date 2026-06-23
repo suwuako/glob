@@ -1,13 +1,12 @@
-import Markdown from 'react-markdown'
+import MdRenderer from './components/MdRenderer'
 // import css from './rustracer.css'
 import blog from './blogs/rustracer.md?raw'
 
 function Rustracer() {
   return (
-    <>
-      <p> rustracer </p>
-      <Markdown>{blog}</Markdown>
-    </>
+    <div className="container">
+      <MdRenderer content={blog} />
+    </div>
   )
 }
 

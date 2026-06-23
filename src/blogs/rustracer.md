@@ -3,15 +3,13 @@
 Raytracing is 
 
 
-# Getting started
-
-## Outputting an image
+# Outputting an image
 Lets first output an image - the book reccomends using a ppm since you can just print to
 stdout, but why should I when I can have the `bmp` crate already do it for me?    
 &nbsp;  
 Lets just do a cheeky `cargo add bmp` and steal the example code from the `bmp` page:
 
-```
+```rust
 #[macro_use]
 extern crate bmp;
 use bmp::{Image, Pixel};
@@ -27,28 +25,32 @@ fn main() {
 ```
 
 A few things - I don't want the bmp macros, so I'll be deleting lines 1 and 2 and
-replacing `px!(x, y, 200)` with a `Pixel::new()`. However, this
-leads to a new issue where `(x, y)` are are a tuple of `u32`s, whereas if we look at the
+replacing
+&nbsp;
+`px!(x, y, 200)` with `Pixel::new()`. However, this
+leads to a new issue where `(x, y)` are are a tuple of `u32`s whereas if we look at the
 constructor for `Pixel` [2], we will see that its defined as:
 
-```pub struct Pixel {
+```rust
+pub struct Pixel {
     pub r: u8,
     pub g: u8,
     pub b: u8,
-}```
+}
+```
 
 The rust compiler (rightfully so) is unhappy about this... We're tossing in a u32 into a
 function that takes in a u8, which would mean we lose 24 bits of precision when we cast
 down! Rust sees this and decides to warn us, but if we explicitly cast the `u32 as u8`,
 then the compiler stops complaining:
 
-```
+```rust
 img.set_pixel(x, y, Pixel::new(x as u8, y as u8, 200));
 ```
 
 Lets try running this with `cargo run`, and lo-and-behold: 
 
-```
+```bash
 ❯ cargo run
    Compiling rustracer v0.1.0 (/home/sw/git/rustracer)
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.08s
@@ -58,7 +60,7 @@ Lets try running this with `cargo run`, and lo-and-behold:
 
 Wonderful! Lets check out the image to see what it looks like:
 
-![babys first bmp](output-an-image.bmp "meow")
+![babys first bmp](/public/output-an-image.bmp "meow")
 
 But wait - we've glazed over a few things... We've informed the compiler that "yes, we do
 want to lose 24 bits of precision", but we've never actually lost precision here - our
