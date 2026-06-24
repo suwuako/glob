@@ -54,6 +54,12 @@ h2, h4 {
     margin: 0 auto;
     padding: 0 24px;
 }
+.blogheader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+    padding: 0 552px;
+}
 
 img {
     display: block;
