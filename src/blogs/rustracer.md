@@ -1,4 +1,13 @@
-# Outputting an image
+# What is a raytracer? How do we start?
+
+Raytracing is a computer graphics rendering technique which makes realistic images by 
+simulating rays of light! For each pixel of the screen, the computer sends out a ray of light
+in the camera's angle, and simulates what colour the ray of light will look like!
+
+We will be following the "raytracing in one weekend"[1] book
+
+# Getting started
+## Outputting an image
 Lets first output an image - the book reccomends using a ppm since you can just print to
 stdout, but why should I when I can have the `bmp` crate already do it for me?    
 &nbsp;  
@@ -128,7 +137,7 @@ failed to cast...
 ```
 
 Great! Theres more to it: `TryFrom` is a equivalent trait that when implement, provides
-`TryInto` thanks to derive magic!
+`TryInto` thanks to derive magic, but I don't want to explain it rn ><
 
 ## The next part (vectors)
 
@@ -211,7 +220,27 @@ impl std::ops::Add for Vec3 {
 }
 ```
 
-...and test it out!
+`Add` here is a builtin trait that overloads the `+` operator such that any call of 
+```rust
+let a: Vec3 = new::Vec3(1.0, 2.0, 3.0);
+let b: Vec3 = new::Vec3(1.0, 2.0, 3.0);
+
+a + b;
+```
+
+gets resolved to...
+
+```rust
+a.add(b);
+```
+
+...and lets test it out!
+
+```bash
+v1: x: 3, y: 3 z: 3, v2: x: 1, y: 2 z: 3
+v3: x: 4, y: 5 z: 6
+```
+Amazing! Lets try printing out `v1` and `v2` after `v3` is computed.
 
 ```rust
 mod vectors;
@@ -226,6 +255,7 @@ fn main() {
 
     let v3 = v1 + v2;
     println!("v3: {}", v3);
+    println!("v1: {}, v2: {}", v1, v2);
 }
 ```
 
@@ -248,8 +278,14 @@ error[E0382]: borrow of moved value: `v1`
    |                                ^^ value borrowed here after move
 ```
 
-Now, we could do this with references but that would also mean having to type annoying
-syntax like `v3 == &v1 ++ &v1`. Instead, lets just `#derive` `Copy, Clone` on `Vec3`, and
+Remember in our previous example where we stated `a + b` is equals to `a.add(b)`? If we 
+looked at the arguments of `Add`, we will see that it takes in a `Self` for both LHS and RHS!
+
+That means rust's ownership system takes in `a` and `b`, and since neither `a` nor `b` are
+getting returned, they get `drop`ped at the end of the function!
+
+Now, we could fix this with references but that would also mean having to type annoying
+syntax like `v3 = &v1 + &v1`. Instead, lets just `#derive` `Copy, Clone` on `Vec3`, and
 now every time we call a function on `Vec3`, it should create a deep copy!
 
 ```rust
@@ -261,6 +297,8 @@ pub struct Vec3 {
 }
 
 ```
+
+Lets test it out...
 
 ```rust
 ❯ cargo run
