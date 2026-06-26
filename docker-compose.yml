@@ -2,10 +2,6 @@ services:
   glob:
     build: .
     image: glob
-    volumes:
-      - ./mnemosyne:/mnemosyne:z
-    ports:
-      - "3000:80"
     networks:
       - "mononetwork"
 
