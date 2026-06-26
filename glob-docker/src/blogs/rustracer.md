@@ -64,7 +64,7 @@ Lets try running this with `cargo run`, and lo-and-behold:
 
 Wonderful! Lets check out the image to see what it looks like:
 
-![babys first bmp](/public/rustracer/output-an-image.bmp "the bmp in question")
+![babys first bmp](/rustracer/output-an-image.bmp "the bmp in question")
 
 But wait - we've glazed over a few things... We've informed the compiler that "yes, we do
 want to lose 24 bits of precision", but we've never actually lost precision here - our
@@ -144,7 +144,7 @@ Great! Theres more to it: `TryFrom` is a equivalent trait that when implement, p
 With graphics programming, we need vectors. If you don't know what a vector is, its just a
 line in space with a direction (where is it pointing?) and magnitude (how long it is).
 
-![example 3d vector](/public/rustracer/3d-vector-example.gif)
+![example 3d vector](/rustracer/3d-vector-example.gif)
 
 In our case, our raytracer handles rays (which are just vectors) in three dimensions, so
 we can just create a `struct Vec3` with helpful methods that makes life much easier for
