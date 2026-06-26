@@ -475,6 +475,7 @@ everything seems to be in order! Lets move onto colour and rays!
 
 ## Colours and Rays
 
+So we have `Vectors`: 
 
 # Referneces
 1. https://raytracing.github.io/books/RayTracingInOneWeekend.html     
