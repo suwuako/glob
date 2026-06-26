@@ -1,9 +1,11 @@
-FROM node:26-alpine3.23
+FROM node:26-alpine3.23 AS build
 
-COPY glob-docker glob/
+COPY glob-docker /glob
 WORKDIR /glob
 
 RUN npm i
-# ENV PATH="/venv/bin:$PATH"
 RUN npm run build
-CMD ["npm", "start"]
+
+FROM nginx:alpine
+COPY --from=build /glob/dist /usr/share/nginx/html
+EXPOSE 80
