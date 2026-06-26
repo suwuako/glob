@@ -389,8 +389,8 @@ unit vector by first finding its length, and dividing each of its components by 
 length! 
 
 The dot product is a measure of "how similar" two angles are. You don't need to know why
-we do this, but the general formula for two vectors `a` and `b` is `a.x * b.x + a.y * b.y
-+ a.z * b.z`. The dot product is useful for determining things like intersections between
+we do this, but the general formula for two vectors `a` and `b` is `a.x * b.x + a.y * b.y a.z * b.z`.
+The dot product is useful for determining things like intersections between
   a ray and an object, or the reflection of said ray (we go into this later!)
 
 The cross product is a bit of an interesting function - given any two vectors, you can
@@ -475,7 +475,78 @@ everything seems to be in order! Lets move onto colour and rays!
 
 ## Colours and Rays
 
-So we have `Vectors`: 
+So we have `Vectors`, which are just a line with a direction and magnitude. Rays are
+vectors along a given line in a point in 3D space! We can think of a ray as a function
+`P(t) = A + tb`, where `P(t)` is a position in 3D space, `A` is a point in 3D space and
+`b` is a direction. By doing so, `P(t)` becomes a point in 3D space that originates from
+`A` and slides along the line drawn by `b`.
+
+We can thus represent the ray as an origin vector, a direction vector and a scalar!
+```rust
+#[derive(Copy, Clone)]
+pub struct Ray {
+    pub origin: Vec3,
+    pub dir: Vec3,
+    pub scalar: f64,
+}
+```
+and for the same reasons for `Vec3`, we derive `Copy, Clone`! We also want a nice function
+to call to figure out where the ray is at, so lets write out an `at()` function to figure
+out where the ray is at! We also need a constructor for the `Ray`, so lets get them both
+done in one go c:
+
+```rust
+impl Ray {
+    pub fn new(origin: Vec3, dir: Vec3, scalar: f64) -> Self {
+        Ray {
+            origin, dir, scalar
+        }
+    }
+    pub fn at(self) -> Vec3 {
+        self.dir * self.scalar + self.origin
+    }
+}
+```
+
+and to test it out, lets try initialising a ray and seeing where its `at()`.
+```rust
+mod vectors;
+mod rays;
+
+//use bmp::{Image, Pixel};
+use vectors::Vec3;
+use rays::Ray;
+
+fn main() {
+    let v1 = Vec3::new(3.0, 3.0, 3.0);
+    let v2 = Vec3::new(1.0, 2.0, 3.0);
+
+    let r = Ray::new(v1, v2, 8.0);
+
+    println!("Ray is at {}", r.at());
+}
+```
+
+and the output is...
+
+```bash
+Ray is at x: 11, y: 19 z: 27
+```
+
+Lets double check if thats right on a graphing program! 
+
+https://www.desmos.com/3d/5f0lcesoji
+
+You can see here (try setting `s` to `8`) that it does in fact, run work! Lets also get
+colour working! A colour consists of three values, red, green and blue (`rgb`) values.
+This is really similar to our `Vec3` function, except for the fact that colours need to be
+within `256`, and also they need to be `u8`s, since you can't have `128.5` of red, only
+`128` or `129`. We don't need any of the fancy vector functionality from `Vec3`, so we can
+just create an entirely new struct that has three `u8`s, add, mul, div and subtract
+functionality! We can just copy that over from our `Vec3` and adapt it for our colour
+struct: change every instance of `{x, y, z}` to `{r, g, b}`, and `f64` to `u8`!
+
+## Sending rays into a scene
 
 # Referneces
 1. https://raytracing.github.io/books/RayTracingInOneWeekend.html     
