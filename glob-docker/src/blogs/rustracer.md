@@ -546,7 +546,97 @@ just create an entirely new struct that has three `u8`s, add, mul, div and subtr
 functionality! We can just copy that over from our `Vec3` and adapt it for our colour
 struct: change every instance of `{x, y, z}` to `{r, g, b}`, and `f64` to `u8`!
 
+## Creating a library
+
+Before we do any raytracing, we should export our structs (`vectors.rs`, `rays.rs`,
+`colours.rs`) to a library crate which we can then import into our main function
+
+`lib.rs:`
+
+```rust
+pub mod vectors;
+pub mod rays;
+pub mod colours;
+```
+
+And to use our library crate in main:
+
+`main.rs`
+```rust
+//use bmp::{Image, Pixel};
+use rustracer::vectors::Vec3;
+use rustracer::rays::Ray;
+use rustracer::colours::Colour;
+
+fn main() {
+    let v1 = Vec3::new(3.0, 3.0, 3.0);
+    let v2 = Vec3::new(1.0, 2.0, 3.0);
+    println!("v1: {}, v2: {}", v1, v2);
+
+    let v3 = v1 + v2;
+    println!("v3: {}", v3);
+    println!("v1: {}, v2: {}", v1, v2);
+
+    let r = Ray::new(v1, v2, 8.0);
+
+    println!("Ray is at {}", r.at());
+}
+```
+
 ## Sending rays into a scene
+
+Now we can try sending rays into our actual raytracer! We first want to determine the
+dimensions of the image we're outputting - we don't want it to be square, do we? 
+
+Well, we can create an aspect ratio (`image_width / image_height`), and supply the image
+width. We can then calculate the image height by dividing the aspect ratio by the width!
+
+`image_width / (image_width / image_height) = image_width/image_width * image_height =
+image_height`
+
+Lets write a `draw()` function in `lib.rs` to draw images for us!
+
+```rust
+pub fn draw(aspect_ratio: f64, img_width: u32) -> () {
+    let img_height: u32 = (img_width as f64 / aspect_ratio) as u32;
+   let mut img = Image::new(img_width, img_height);
+
+    for (x, y) in img.coordinates() {
+        img.set_pixel(x, y, Pixel::new(x as u8, y as u8, 200));
+    }
+    let _ = img.save("img.bmp");
+}
+```
+
+Doing this, we can scale up or down the image without affecting the aspect ratio by
+adjusting `image_width`.
+
+We now need to setup our viewport! A viewport is a rectangle in our 3d world which
+we see our world through. We will send rays through every pixel of the viewport which
+simulate the refraction of light to deterine the colour the pixel in the viewport.
+
+To start off, lets create a viewport with an arbitrary height (`2.0`), and create our
+width based off the aspect ratio: 
+
+```rust
+pub fn draw(aspect_ratio: f64, img_width: u32, viewport_width: u32) -> ()
+    let viewport_height: u32 = (viewport_width as f64 / aspect_ratio) as u32;
+```
+
+Now, knowing our viewport dimensions are good and all, but we need to know where that
+viewport is and where it is facing! We can do that with the camera - the camera will lie
+behind the viewport, and rays will be sent originating from the camera to each pixel of
+the viewport. The viewport will be a certain distance from the camera and the ray sent
+from the camera to the centre of the viewport will be orthogonal to our viewport:
+
+![camera rays](/rustracer/camera-orthogonal-to-viewport.png)
+
+For the sake of simplicity, we can just set our camera to be at `{0,0,0}` (we can have
+the camera position be taken in as an argument to our `draw()` function).
+
+```rust
+pub fn draw(aspect_ratio: f64, img_width: u32, viewport_width: f64, camera_pos: Vec3) -> () 
+```
 
 # Referneces
 1. https://raytracing.github.io/books/RayTracingInOneWeekend.html     
