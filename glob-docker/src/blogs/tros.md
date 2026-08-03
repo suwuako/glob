@@ -328,6 +328,16 @@ And lets try again...
 
 It boots!
 ![success](/tros/success.mp4 "yay")
+![success](/tros/success.png "yay")
+
+## Afterword
+
+Theres quite a lot of things rust does here thats incredibly nice that you dont get with
+C... Cross compilation toolchains is one thing, as well as `nostd`! Maybe that should be
+my next blog post after my unfinished raytracer...
+
+My blog is open source, so access the blog [here](github.com/suwuako/glob) if you want to
+mess with it yourself too c:
 
 # References
 [1] https://github.com/nouveaus/kaolin  
