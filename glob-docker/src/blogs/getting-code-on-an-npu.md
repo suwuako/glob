@@ -108,6 +108,23 @@ The mental model in 60 seconds
     You wrap the whole thing in @iron.jit. Calling the decorated function the first time JIT-compiles to an xclbin + instruction stream and runs it on the attached NPU. Subsequent calls hit a cache.
 ```
 
+### okay, what is an AIE tile?
+
+To understand that, we first must look at the NPU column architecture. (9) (wow, we are
+running in circles here)
+
+I honestly reccomend reading (9) highly. Its very interesting, but heres the simple
+rundown
+
+#### The simple rundown
+
+The AMD Ryzen NPU architecture consists of a 2d array grid of tiles, which are grouped
+into columns. 
+
+![](/npu/aie_column.svg)
+
+
+
 
 ### from userspace to NPU
 
@@ -170,3 +187,4 @@ dp(1)]
 (6) https://docs.amd.com/r/en-US/Vitis-Tutorials-AI-Engine-Development/Build-XCLBIN-from-Scratch
 (7) github.com/xilinx/mlir-aie
 (8) https://github.com/amd/IRON
+(9) https://riallto.ai/notebooks/3_2_Ryzenai_capabilities.html
