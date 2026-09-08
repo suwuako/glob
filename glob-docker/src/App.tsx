@@ -9,22 +9,23 @@ interface BlogPost {
 
 const posts: BlogPost[] = [
   {
-    title: "rustracer",
-    path: "rustracer",
-    date: "24/06/2026",
-    summary: "A 3D raytracer written in Rust from scratch following Ray Tracing in One Weekend.",
+    title: "running code on an npu",
+    path: "getting-code-on-an-npu",
+    date: "4/09/2026",
+    summary: `Playing around with executing my own instructions on an NPU.
+If we get lucky we even get to calculate the 10^20th fibonacci number in under a microsecond!`,
   },
   {
     title: "uefi boot with rust",
     path: "tros",
     date: "3/8/2026",
-    summary: "Booting a Rust kernel directly with UEFI without needing a bootloader.",
+    summary: "Booting rust code directly in ring 0 with UEFI without bootloaders",
   },
   {
-    title: "running code on an npu",
-    path: "getting-code-on-an-npu",
-    date: "4/09/2026",
-    summary: "Exploring AMD Ryzen AI NPU architecture and running code on an NPU chip.",
+    title: "rustracer (WIP)",
+    path: "rustracer",
+    date: "24/06/2026",
+    summary: "A 3D raytracer written in Rust from scratch following Ray Tracing in One Weekend",
   },
 ];
 
