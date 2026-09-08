@@ -94,18 +94,20 @@ Lets find a source online... (6) (7) (8).
 
 ![yikers](/npu/sponge.gif "ruh roh")
 
-Okay. So the idea here is that AMD gives us a few options. IRON is a python API that binds
-to MLIR-AE IR representations. Thus our python code generates MLIR IR code (wow so thats
-what the IR stood for) which is then compiled with clang AIE code gen to create an xclbin. 
+Ok, so this is alot to take in. Lets start off with (7)'s programming guide.
 
-phew, that was a mouthful. The general pipeline is:
-1. IRON generates IR code 
-2. MLIR compiles IR into AIE code 
-3. clang compiles AIE with other shared object files to create an xclbin
+```md 
+The mental model in 60 seconds
 
-### Decisions, decisions
+    The NPU is a 2D grid of AIE tiles. The interesting ones are compute tiles (run code) and mem tiles (shared L2 scratchpad). At the edge of the array, shim tiles move data to/from main memory.
+    Tiles are connected by stream switches. The path from main memory to a compute tile is always shim → (mem) → compute, scheduled by per-tile DMA engines.
+    You describe an NPU program in Python:
+        A Worker is the code that runs on one compute tile.
+        An ObjectFifo is a streaming channel between two endpoints (host↔tile, tile↔tile). Acquire / release.
+        A Runtime sequence is the host-side dance — what tensors get filled into the array, what gets drained back.
+    You wrap the whole thing in @iron.jit. Calling the decorated function the first time JIT-compiles to an xclbin + instruction stream and runs it on the attached NPU. Subsequent calls hit a cache.
+```
 
-i do NOT want to write IR code. Time to use IRON
 
 ### from userspace to NPU
 
