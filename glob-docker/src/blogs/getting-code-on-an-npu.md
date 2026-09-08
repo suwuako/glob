@@ -13,9 +13,8 @@ being able to repair or upgrade my laptop is really sick to me. So i decided to 
 the framework 13. 
 
 One of the options for a processor was a "Ryzen AI"
-chip. Personally, I'm not a huge fan of AI but I'm also not against checking out new
-technologies! As such, after some research on the processor, I've shelled out an extra 
-$200 and after a few weeks, the laptop arrived. 
+chip. I'm not against checking out new technologies so after some research, i shelled out an extra $200! 
+After a few weeks, the laptop arrived. 
 
 ```bash
 ❯ lscpu | grep -i ryzen
@@ -74,11 +73,39 @@ Not sure if my hypotheses are correct, but according to amd's documentation (3),
 theres a file format called an `xclbin` file that is used to load code for fpgas, npus,
 and whatnot. 
 
-But then that leads to two questions:
+But then that leads to two (and a half) questions:
 - how do we compile an xclbin file?
+    - what actually is an xclbin
 - how do we get it on the npu?
 
+### what actually is an xclbin
+
+After looking stuff up (again) for a bit (5), an xclbin is a binary format for XRT, which
+is an open source software stack to connect application code on a cpu to hardware
+accelerators like NPUs and FPGAs. So thats pretty sick! If we compile a `.xclbin` file and
+hand it off to XRT, we don't need to do any extra stuff to have it loaded on the npu since
+XRT handles it for us
+
 ### compiling an xclbin
+
+So how do we actually compile an xclbin from scratch? 
+
+Lets find a source online... (6) (7) (8).
+
+![yikers](/npu/sponge.gif "ruh roh")
+
+Okay. So the idea here is that AMD gives us a few options. IRON is a python API that binds
+to MLIR-AE IR representations. Thus our python code generates MLIR IR code (wow so thats
+what the IR stood for) which is then compiled with clang AIE code gen to create an xclbin. 
+
+phew, that was a mouthful. The general pipeline is:
+1. IRON generates IR code 
+2. MLIR compiles IR into AIE code 
+3. clang compiles AIE with other shared object files to create an xclbin
+
+### Decisions, decisions
+
+i do NOT want to write IR code. Time to use IRON
 
 ### from userspace to NPU
 
@@ -137,3 +164,7 @@ dp(1)]
 (2) https://en.wikipedia.org/wiki/Neural_processing_unit  
 (3) https://ryzenai.docs.amd.com/en/ryzen-ai-1.0.1/runtime_setup.html  
 (4) https://ryzenai.docs.amd.com/en/latest/getstartex.html  
+(5) https://github.com/xilinx/XRT
+(6) https://docs.amd.com/r/en-US/Vitis-Tutorials-AI-Engine-Development/Build-XCLBIN-from-Scratch
+(7) github.com/xilinx/mlir-aie
+(8) https://github.com/amd/IRON
