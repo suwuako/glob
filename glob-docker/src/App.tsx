@@ -5,10 +5,22 @@ function App() {
 
   return (
     <>
-      <title>ronnie blog</title>
-      <h3> ronnie blog </h3>
-      <button onClick={() => {navigate('rustracer')}}> rustracer </button>
-      <button onClick={() => {navigate('tros')}}> uefi boot with rust </button>
+      <title>ronie technical blogs</title>
+      <h3> ronie technical blogs </h3>
+
+      <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+              alignItems: "center",
+            }}
+      >
+        <h4> My musings on (mostly technical) fun, interesting and/or evil computer sciecne topics </h4>
+        <button onClick={() => {navigate('rustracer')}}> rustracer </button>
+        <button onClick={() => {navigate('tros')}}> uefi boot with rust </button>
+        <button onClick={() => {navigate('getting-code-on-an-npu')}}> running code on an npu </button>
+      </div>
 
           <iframe src="https://mrrrp.cat/ring/blog.suwuako.com/iframe"
               title="mrrrp.cat webring"
